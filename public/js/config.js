@@ -7,7 +7,7 @@ WC.config = {
   GROUP_ORDER: ['run', 'bike', 'walk'],
 
   /* 各群組報名目標人數 */
-  GROUP_TARGETS: { run: 500, bike: 500, walk: 500 },
+  GROUP_TARGETS: { run: 550, bike: 375, walk: 625 },
 
   /* 各群組 emoji 圖示 */
   GROUP_ICONS: { run: '🏃', bike: '🚴', walk: '🚶' },

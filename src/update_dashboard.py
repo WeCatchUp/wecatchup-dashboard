@@ -21,15 +21,15 @@ warnings.filterwarnings("ignore")
 
 ACTIVITY = {
     "name": "WeCatchUp 第四團",
-    "start": "2026-01-05",
-    "end": "2026-03-15",
+    "start": "2026-04-27",
+    "end":   "2026-07-05",
     "weeks": 10,
 }
 
 GROUP_TARGETS = {
-    "run":  500,
-    "bike": 500,
-    "walk": 500,
+    "run":  550,
+    "bike": 375,
+    "walk": 625,
 }
 
 GROUP_CONFIG = {
