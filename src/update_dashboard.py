@@ -446,6 +446,12 @@ def main() -> None:
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(output_data, f, ensure_ascii=False, indent=2)
 
+    public_path = out_path.parent.parent / "public" / "data" / "dashboard_data.json"
+    public_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(public_path, "w", encoding="utf-8") as f:
+        json.dump(output_data, f, ensure_ascii=False, indent=2)
+    print(f"  ✅ 同步寫入 {public_path}")
+
     # 終端機摘要
     print()
     for gid, g in groups.items():
