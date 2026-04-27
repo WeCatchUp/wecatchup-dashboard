@@ -1,0 +1,48 @@
+# 原始資料（含個資，不上傳）
+data/input/
+data/input/*.xlsx
+
+# Python 快取
+__pycache__/
+*.pyc
+*.pyo
+.Python
+
+# macOS 系統檔
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# 暫存 server log
+/tmp/
+*.log
+
+# Node（預防性）
+node_modules/
+
+# 環境設定（含 server IP，不上傳）
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+
+# Claude Code 設定
+.claude/
+
+# Legacy React 建置與設定（第三團 money dashboard 殘留）
+build/
+package.json
+package-lock.json
+postcss.config.js
+tailwind.config.js
+
+# 開發過程紀錄（內部文件）
+DAILY_SUMMARY.md
+DEBUG_CHECKLIST.md
+DEVELOPMENT_LOG_*.md
+FRONTEND_DEVELOPMENT_LOG.md
+HOTFIX_SUMMARY_*.md
+PROJECT_STRUCTURE.md
+README_FIXES.md
+TROUBLESHOOTING.md
