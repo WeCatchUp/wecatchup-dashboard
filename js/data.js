@@ -8,7 +8,7 @@ window.WC = window.WC || {};
  */
 WC.loadData = async function(onSuccess, onError) {
   try {
-    const res = await fetch('../data/dashboard_data.json');
+    const res = await fetch('./data/dashboard_data.json');
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     onSuccess(data);
