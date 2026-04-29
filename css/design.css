@@ -1,0 +1,391 @@
+/* ── 設計代幣（CSS 自訂屬性） ─────────────────────────────── */
+:root {
+  /* 基礎色彩 */
+  --background: #F5F5F7;
+  --foreground: #0F172A;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #0052FF;
+  --accent-secondary: #4D7CFF;
+  --accent-foreground: #FFFFFF;
+  --border: #E2E8F0;
+  --card: #FFFFFF;
+
+  /* 各團群組色 */
+  --run-color: #3b82f6;
+  --run-light: #93c5fd;
+  --bike-color: #f97316;
+  --bike-light: #fdba74;
+  --walk-color: #22c55e;
+  --walk-light: #86efac;
+
+  /* 陰影層級 */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,0.06);
+  --shadow-xl: 0 4px 8px rgba(0,0,0,0.06);
+  --shadow-accent: 0 4px 14px rgba(0,82,255,0.25);
+
+  /* 字型 */
+  --font-ui: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Cascadia Code", monospace;
+
+  /* 圓角 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+/* ── 全域樣式 ────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 區段標籤徽章 ────────────────────────────────────────── */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1px solid #E5E5E5;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.section-label-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ── 卡片基礎 ────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1px solid #EBEBEB;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── 摘要統計卡片 ────────────────────────────────────────── */
+.stat-card {
+  background: var(--card);
+  border: 1px solid #EBEBEB;
+  border-radius: 16px;
+  box-shadow: none;
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: transform 0.2s ease-out;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.stat-value {
+  font-size: 3.25rem;
+  font-weight: 900;
+  color: var(--foreground);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted-foreground);
+  margin-top: 4px;
+}
+
+.stat-sublabel {
+  font-size: 11px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* ── 群組 KPI 卡片 ───────────────────────────────────────── */
+.group-card {
+  background: var(--card);
+  border: 1px solid #EBEBEB;
+  border-radius: 20px;
+  box-shadow: none;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.group-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.group-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.group-card-top-strip {
+  height: 5px;
+  width: 100%;
+}
+
+/* ── KPI 卡片內統計方格 ──────────────────────────────────── */
+.stat-box {
+  background: #FAFAFA;
+  border: 1px solid #F0F0F0;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-box-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--foreground);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-box-label {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 6px;
+}
+
+.stat-box-sub {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 3px;
+}
+
+.stat-box-achieve {
+  border-radius: var(--radius-md);
+  padding: 16px;
+  text-align: center;
+  border: 2px solid;
+}
+
+.achieve-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+
+/* ── 進度條 ──────────────────────────────────────────────── */
+.progress-track {
+  background: #EBEBEB;
+  border-radius: 999px;
+  height: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  width: 0%;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── 達標率徽章（卡片標題列） ────────────────────────────── */
+.rate-badge {
+  margin-left: auto;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+/* ── 圖表卡片 ────────────────────────────────────────────── */
+.chart-card {
+  background: var(--card);
+  border: 1px solid #EBEBEB;
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+  transition: transform 0.2s ease-out;
+  padding: 24px;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+/* ── 時間戳記列 ──────────────────────────────────────────── */
+.timestamp-row {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  line-height: 1.8;
+}
+
+/* ── 漸層文字工具類 ──────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── 圖示實色背景工具類 ──────────────────────────────────── */
+.solid-bg-purple { background: #7C3AED; }
+.solid-bg-green  { background: #059669; }
+.solid-bg-orange { background: #EA580C; }
+.solid-bg-blue   { background: #2563EB; }
+
+/* ── 版面 ────────────────────────────────────────────────── */
+.dashboard-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px 48px;
+}
+
+.dashboard-header {
+  padding: 32px 0 24px;
+  text-align: left;
+  border-bottom: none;
+  background: transparent;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 8px 0 0 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.dashboard-subtitle {
+  font-size: 13px;
+  color: var(--muted-foreground);
+  margin-top: 6px;
+}
+
+/* 各區段標題列 */
+.section-header {
+  margin-bottom: 16px;
+}
+
+/* 摘要列格狀排版 */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+/* KPI 卡片格狀排版 */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+/* KPI 卡片內三欄統計 */
+.kpi-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* 圖表格狀排版 */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* 頁尾 */
+.dashboard-footer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 40px;
+  padding-bottom: 24px;
+}
+
+/* ── 手機版響應式（768px 以下） ──────────────────────────── */
+@media (max-width: 768px) {
+  .dashboard-wrapper {
+    padding: 16px 16px;
+  }
+
+  .dashboard-header {
+    padding: 16px;
+  }
+
+  .dashboard-title {
+    font-size: 1.4rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-box-value {
+    font-size: 1.75rem;
+  }
+}
