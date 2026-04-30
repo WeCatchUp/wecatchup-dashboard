@@ -22,12 +22,12 @@ WC.renderCharts = function(groups) {
 
     <!-- 年齡區間分布 -->
     <div class="chart-card">
-      <h3 class="chart-title">年齡區間分布（人數）</h3>
+      <h3 class="chart-title">年齡區間分布（運動次數）</h3>
       <div style="position:relative;height:280px;">
         <canvas id="chart-age"></canvas>
       </div>
       <p style="${axisStyle}">
-        X 軸：年齡區間 ｜ Y 軸：人數（人）。數值越高代表該年齡層運動頻率越高。
+        X 軸：年齡區間 ｜ Y 軸：運動次數（筆）。數值越高代表該年齡層運動頻率越高。
       </p>
     </div>
 
@@ -49,7 +49,7 @@ WC.renderCharts = function(groups) {
         <canvas id="chart-time"></canvas>
       </div>
       <p style="${axisStyle}">
-        X 軸：一天中的時段 ｜ Y 軸：運動次數（筆）。可觀察成員最常運動的時間段，作為未來活動宣傳的參考。
+        X 軸：一天中的時段 ｜ Y 軸：運動次數（筆）。16-20 時為高峰，可規劃推播提醒時機。
       </p>
     </div>
 
@@ -70,8 +70,7 @@ WC.renderCharts = function(groups) {
   renderGroupedBar(
     'chart-age',
     cfg.AGE_LABELS,
-    buildDatasets(groups, 'age_distribution', cfg.AGE_LABELS),
-    '人'  // 年齡分布以人數計
+    buildDatasets(groups, 'age_distribution', cfg.AGE_LABELS)
   );
 
   renderGroupedBar(
@@ -107,13 +106,8 @@ function buildDatasets(groups, labelKey, labels) {
   });
 }
 
-/* 渲染分組長條圖
- * @param {string} canvasId
- * @param {string[]} labels
- * @param {Object[]} datasets
- * @param {string} [unit='次'] - tooltip 單位，年齡分布傳入 '人'
- */
-function renderGroupedBar(canvasId, labels, datasets, unit = '次') {
+/* 渲染分組長條圖 */
+function renderGroupedBar(canvasId, labels, datasets) {
   const cfg = WC.config;
   const ctx = document.getElementById(canvasId).getContext('2d');
   new Chart(ctx, {
@@ -125,7 +119,7 @@ function renderGroupedBar(canvasId, labels, datasets, unit = '次') {
         ...cfg.CHART_DEFAULTS.plugins,
         tooltip: {
           callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${fmtNum(ctx.parsed.y)} ${unit}`
+            label: ctx => ` ${ctx.dataset.label}: ${fmtNum(ctx.parsed.y)} 次`
           }
         }
       }

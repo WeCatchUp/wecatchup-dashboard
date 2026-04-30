@@ -21,15 +21,15 @@ warnings.filterwarnings("ignore")
 
 ACTIVITY = {
     "name": "WeCatchUp 第四團",
-    "start": "2026-01-05",
-    "end": "2026-03-15",
+    "start": "2026-04-27",
+    "end":   "2026-07-05",
     "weeks": 10,
 }
 
 GROUP_TARGETS = {
-    "run":  500,
-    "bike": 500,
-    "walk": 500,
+    "run":  550,
+    "bike": 375,
+    "walk": 625,
 }
 
 GROUP_CONFIG = {
@@ -232,18 +232,29 @@ def process_exercise(filepath: str, group_id: str, leader_emails: set) -> dict:
         else:
             total_km = 0.0
 
+        # 只取活動期間的資料做分布統計
+        if date_col in df.columns:
+            dates_for_dist = pd.to_datetime(df[date_col], errors="coerce")
+            period_mask_dist = (
+                (dates_for_dist >= pd.Timestamp(ACTIVITY["start"])) &
+                (dates_for_dist <= pd.Timestamp(ACTIVITY["end"]))
+            )
+            dist_df = df[period_mask_dist].copy()
+        else:
+            dist_df = df.copy()
+
         # 年齡分布
         age_dist = {k: 0 for k in AGE_LABELS}
-        if age_col in df.columns:
-            ages = df[age_col].dropna()
+        if age_col in dist_df.columns:
+            ages = dist_df[age_col].dropna()
             cut = pd.cut(ages, bins=AGE_BINS, labels=AGE_LABELS, right=True)
             counts = cut.value_counts().reindex(AGE_LABELS, fill_value=0)
             age_dist = counts.to_dict()
 
         # 運動時長分布（秒 → 分鐘，只計算 ≥1 分鐘的記錄）
         dur_dist = {k: 0 for k in DURATION_LABELS}
-        if duration_col in df.columns:
-            durations_min = (df[duration_col].dropna() / 60.0)
+        if duration_col in dist_df.columns:
+            durations_min = (dist_df[duration_col].dropna() / 60.0)
             durations_min = durations_min[durations_min >= 1]
             cut = pd.cut(durations_min, bins=DURATION_BINS, labels=DURATION_LABELS, right=True)
             counts = cut.value_counts().reindex(DURATION_LABELS, fill_value=0)
@@ -251,8 +262,8 @@ def process_exercise(filepath: str, group_id: str, leader_emails: set) -> dict:
 
         # 運動時段分布
         time_dist = {k: 0 for k in TIME_LABELS}
-        if start_col in df.columns:
-            hours = df[start_col].apply(extract_hour).dropna().astype(int)
+        if start_col in dist_df.columns:
+            hours = dist_df[start_col].apply(extract_hour).dropna().astype(int)
             cut = pd.cut(hours, bins=TIME_BINS, labels=TIME_LABELS, right=False)
             counts = cut.value_counts().reindex(TIME_LABELS, fill_value=0)
             time_dist = counts.to_dict()
