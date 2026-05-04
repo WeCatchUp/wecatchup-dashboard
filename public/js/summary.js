@@ -38,8 +38,8 @@ WC.renderSummaryBar = function(groups) {
       topGid = gid;
     }
   });
-  const topGroup = cfg.GROUP_NAMES_SHORT[topGid];
-  const topRate  = groups[topGid].achievement_rate || 0;
+  const topGroupName = WC.t('group_' + topGid);
+  const topRate      = groups[topGid].achievement_rate || 0;
 
   /* 四張統計卡片定義 */
   const cards = [
@@ -47,32 +47,32 @@ WC.renderSummaryBar = function(groups) {
       iconClass: 'solid-bg-purple',
       emoji: '👥',
       value: fmtNum(totalRegistrations),
-      label: '總報名人數',
-      sublabel: '三團合計',
+      label: WC.t('stat_total_reg'),
+      sublabel: WC.t('stat_total_reg_sub'),
       sublabelColor: '#6366f1'
     },
     {
       iconClass: 'solid-bg-green',
       emoji: '⚡',
       value: fmtNum(totalActive),
-      label: '活躍運動人數',
-      sublabel: `活躍率 ${activePct}%`,
+      label: WC.t('stat_active'),
+      sublabel: WC.t('stat_active_sub', { pct: activePct }),
       sublabelColor: '#22c55e'
     },
     {
       iconClass: 'solid-bg-orange',
       emoji: '🎯',
       value: `${avgAchievement}%`,
-      label: '整體達標率',
-      sublabel: '加權平均',
+      label: WC.t('stat_achieve'),
+      sublabel: WC.t('stat_achieve_sub'),
       sublabelColor: '#f97316'
     },
     {
       iconClass: 'solid-bg-blue',
       emoji: '🏆',
-      value: topGroup,
-      label: '領先群組',
-      sublabel: `達標率 ${topRate}%`,
+      value: topGroupName,
+      label: WC.t('stat_leader'),
+      sublabel: WC.t('stat_leader_sub', { rate: topRate }),
       sublabelColor: '#3b82f6'
     }
   ];

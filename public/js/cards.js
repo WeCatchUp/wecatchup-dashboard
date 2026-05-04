@@ -41,11 +41,11 @@ WC.renderCards = function(groups) {
               ${g.name}
             </h2>
             <span style="font-size:11px;color:var(--muted-foreground);">
-              個人目標 ${g.goal_km}km・週目標 ${g.weekly_goal_km}km
+              ${WC.t('card_goal', { goal: g.goal_km, weekly: g.weekly_goal_km })}
             </span>
           </div>
           <span class="rate-badge" style="background-color:${g.color};flex-shrink:0;">
-            ${achieveRate}% 達標
+            ${WC.t('card_achieve_badge', { rate: achieveRate })}
           </span>
         </div>
 
@@ -56,14 +56,14 @@ WC.renderCards = function(groups) {
               <span style="font-size:1.75rem;font-weight:900;color:inherit;">${fmtNum(g.registrations)}</span>
               <span style="font-size:1rem;font-weight:500;color:var(--muted-foreground);">/${fmtNum(regTarget)}</span>
             </p>
-            <p class="stat-box-label" style="margin-top:4px;">報名人數</p>
+            <p class="stat-box-label" style="margin-top:4px;">${WC.t('card_registered')}</p>
           </div>
           <div class="stat-box">
             <p class="stat-box-value">
               <span style="font-size:1.75rem;font-weight:900;color:inherit;">${fmtNum(g.active_participants)}</span>
               <span style="font-size:1rem;font-weight:500;color:var(--muted-foreground);">/${fmtNum(g.registrations)}</span>
             </p>
-            <p class="stat-box-label" style="margin-top:4px;">運動人數</p>
+            <p class="stat-box-label" style="margin-top:4px;">${WC.t('card_active')}</p>
           </div>
           <div class="stat-box-achieve"
                style="background-color:${g.color}10;border:1px solid ${g.color}30;">
@@ -71,7 +71,7 @@ WC.renderCards = function(groups) {
               <span style="font-size:1.75rem;font-weight:900;color:${g.color};">${fmtNum(g.achievers)}</span>
               <span style="font-size:1rem;font-weight:500;color:var(--muted-foreground);">/${fmtNum(g.registrations)}</span>
             </p>
-            <p class="stat-box-label" style="margin-top:4px;">達標人數</p>
+            <p class="stat-box-label" style="margin-top:4px;">${WC.t('card_achievers')}</p>
             <span class="achieve-badge" style="background-color:${g.color};">${achieveRate}%</span>
           </div>
         </div>
@@ -80,8 +80,8 @@ WC.renderCards = function(groups) {
         <div class="progress-section">
           <div style="display:flex;justify-content:space-between;font-size:12px;
                       color:var(--muted-foreground);margin-bottom:6px;">
-            <span style="font-weight:500;">報名目標達成</span>
-            <span>${fmtNum(g.registrations)} / ${fmtNum(regTarget)} 人</span>
+            <span style="font-weight:500;">${WC.t('card_reg_progress')}</span>
+            <span>${fmtNum(g.registrations)} / ${fmtNum(regTarget)}</span>
           </div>
           <div class="progress-track">
             <div class="progress-fill"
@@ -99,8 +99,12 @@ WC.renderCards = function(groups) {
         <div class="progress-section" style="margin-top:12px;">
           <div style="display:flex;justify-content:space-between;font-size:12px;
                       color:var(--muted-foreground);margin-bottom:6px;">
-            <span style="font-weight:500;">心率裝置用戶</span>
-            <span>${fmtNum(g.users_with_hr || 0)} 人（佔 ${hrPct}%）・達標 ${fmtNum(g.hr_achievers || 0)} 人</span>
+            <span style="font-weight:500;">${WC.t('card_hr_users')}</span>
+            <span>${WC.t('card_hr_detail', {
+              count:    fmtNum(g.users_with_hr || 0),
+              pct:      hrPct,
+              achievers: fmtNum(g.hr_achievers || 0)
+            })}</span>
           </div>
           <div class="progress-track">
             <div class="progress-fill"

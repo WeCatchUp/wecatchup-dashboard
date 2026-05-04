@@ -16,53 +16,44 @@ WC.renderCharts = function(groups) {
     <div class="section-header" style="grid-column:1/-1;">
       <div class="section-label">
         <span class="section-label-dot"></span>
-        數據分析
+        ${WC.t('section_analytics')}
       </div>
     </div>
 
     <!-- 年齡區間分布 -->
     <div class="chart-card">
-      <h3 class="chart-title">年齡區間分布（人數）</h3>
+      <h3 class="chart-title">${WC.t('chart_age_title')}</h3>
       <div style="position:relative;height:280px;">
         <canvas id="chart-age"></canvas>
       </div>
-      <p style="${axisStyle}">
-        X 軸：年齡區間 ｜ Y 軸：人數（人）。數值越高代表該年齡層運動頻率越高。
-      </p>
+      <p style="${axisStyle}">${WC.t('chart_age_axis')}</p>
     </div>
 
     <!-- 運動時長分布 -->
     <div class="chart-card">
-      <h3 class="chart-title">運動時長分布</h3>
+      <h3 class="chart-title">${WC.t('chart_duration_title')}</h3>
       <div style="position:relative;height:280px;">
         <canvas id="chart-duration"></canvas>
       </div>
-      <p style="${axisStyle}">
-        X 軸：單次運動時長 ｜ Y 軸：運動次數（筆）。可觀察成員最常見的運動時長區間。
-      </p>
+      <p style="${axisStyle}">${WC.t('chart_duration_axis')}</p>
     </div>
 
     <!-- 運動時段分布 -->
     <div class="chart-card">
-      <h3 class="chart-title">運動時段分布</h3>
+      <h3 class="chart-title">${WC.t('chart_time_title')}</h3>
       <div style="position:relative;height:280px;">
         <canvas id="chart-time"></canvas>
       </div>
-      <p style="${axisStyle}">
-        X 軸：一天中的時段 ｜ Y 軸：運動次數（筆）。可觀察成員最常運動的時間段，作為未來活動宣傳的參考。
-      </p>
+      <p style="${axisStyle}">${WC.t('chart_time_axis')}</p>
     </div>
 
     <!-- 前50%參與者平均每人累積公里數 -->
     <div class="chart-card">
-      <h3 class="chart-title">前 50% 參與者・平均每人累積公里數</h3>
+      <h3 class="chart-title">${WC.t('chart_weekly_title')}</h3>
       <div style="position:relative;height:280px;">
         <canvas id="chart-weekly"></canvas>
       </div>
-      <p style="${axisStyle}">
-        📊 各團取累積里程前 50% 的參與者，計算其平均每人每週累積公里數。<br>
-        數值越高代表活躍用戶投入程度越強，可作為下一期活動目標設定參考。
-      </p>
+      <p style="${axisStyle}">${WC.t('chart_weekly_axis').replace(/\\n/g, '<br>')}</p>
     </div>
   `;
 
@@ -71,19 +62,21 @@ WC.renderCharts = function(groups) {
     'chart-age',
     cfg.AGE_LABELS,
     buildDatasets(groups, 'age_distribution', cfg.AGE_LABELS),
-    '人'  // 年齡分布以人數計
+    WC.t('tooltip_unit_person')
   );
 
   renderGroupedBar(
     'chart-duration',
     cfg.DURATION_LABELS,
-    buildDatasets(groups, 'duration_distribution', cfg.DURATION_LABELS)
+    buildDatasets(groups, 'duration_distribution', cfg.DURATION_LABELS),
+    WC.t('tooltip_unit_session')
   );
 
   renderGroupedBar(
     'chart-time',
     cfg.TIME_LABELS,
-    buildDatasets(groups, 'time_distribution', cfg.TIME_LABELS)
+    buildDatasets(groups, 'time_distribution', cfg.TIME_LABELS),
+    WC.t('tooltip_unit_session')
   );
 
   renderTop50AvgKm(groups);
@@ -97,8 +90,17 @@ function buildDatasets(groups, labelKey, labels) {
   return cfg.GROUP_ORDER.map(gid => {
     const g = groups[gid];
     return {
-      label: cfg.GROUP_NAMES_SHORT[gid],
-      data: labels.map(l => (g[labelKey] && g[labelKey][l]) || 0),
+      label: WC.t('group_' + gid),
+      data: labels.map(l => {
+        /* 英文標籤與 JSON key（中文）不同，需對應回原始 key */
+        const origLabels = WC.TRANSLATIONS['zh'][
+          labelKey === 'age_distribution'      ? 'age_labels'      :
+          labelKey === 'duration_distribution' ? 'duration_labels' :
+                                                 'time_labels'
+        ];
+        const origKey = origLabels ? origLabels[labels.indexOf(l)] : l;
+        return (g[labelKey] && (g[labelKey][origKey] || g[labelKey][l])) || 0;
+      }),
       backgroundColor: g.color + 'cc',
       borderColor: g.color,
       borderWidth: 1,
@@ -107,13 +109,8 @@ function buildDatasets(groups, labelKey, labels) {
   });
 }
 
-/* 渲染分組長條圖
- * @param {string} canvasId
- * @param {string[]} labels
- * @param {Object[]} datasets
- * @param {string} [unit='次'] - tooltip 單位，年齡分布傳入 '人'
- */
-function renderGroupedBar(canvasId, labels, datasets, unit = '次') {
+/* 渲染分組長條圖 */
+function renderGroupedBar(canvasId, labels, datasets, unit) {
   const cfg = WC.config;
   const ctx = document.getElementById(canvasId).getContext('2d');
   new Chart(ctx, {
@@ -141,12 +138,15 @@ function renderTop50AvgKm(groups) {
     ...cfg.GROUP_ORDER.map(gid => (groups[gid].top50_weekly_avg_km || []).length),
     1
   );
-  const weekLabels = Array.from({ length: maxWeeks }, (_, i) => `第 ${i + 1} 週`);
+  const weekLabels = Array.from(
+    { length: maxWeeks },
+    (_, i) => WC.t('week_label', { n: i + 1 })
+  );
 
   const datasets = cfg.GROUP_ORDER.map(gid => {
     const g = groups[gid];
     return {
-      label: cfg.GROUP_NAMES_SHORT[gid],
+      label: WC.t('group_' + gid),
       data: g.top50_weekly_avg_km || [],
       borderColor: g.color,
       backgroundColor: g.color + '22',
@@ -159,6 +159,7 @@ function renderTop50AvgKm(groups) {
     };
   });
 
+  const kmSuffix = WC.t('tooltip_km_suffix');
   const ctx = document.getElementById('chart-weekly').getContext('2d');
   new Chart(ctx, {
     type: 'line',
@@ -169,7 +170,7 @@ function renderTop50AvgKm(groups) {
         ...cfg.CHART_DEFAULTS.plugins,
         tooltip: {
           callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: ${fmtKm(ctx.parsed.y)} km（人均累積）`
+            label: ctx => ` ${ctx.dataset.label}: ${fmtKm(ctx.parsed.y)} km ${kmSuffix}`
           }
         }
       },

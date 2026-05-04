@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WeCatchUp 第四團戰情看板</title>
+
+  <!-- 外部依賴 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <!-- 設計系統樣式表 -->
+  <link rel="stylesheet" href="css/design.css" />
+</head>
+<body class="min-h-screen">
+
+  <!-- ── 載入動畫 ──────────────────────────────────────────── -->
+  <div id="loading" class="fixed inset-0 flex flex-col items-center justify-center z-50"
+       style="background:var(--background);">
+    <div class="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4"
+         style="border-color:var(--accent);border-top-color:transparent;"></div>
+    <p id="loading-text" style="color:var(--muted-foreground);font-size:13px;">載入資料中...</p>
+  </div>
+
+  <!-- ── 錯誤提示面板 ──────────────────────────────────────── -->
+  <div id="error" class="fixed inset-0 hidden flex-col items-center justify-center z-50 p-4"
+       style="background:var(--background);">
+    <div style="background:var(--card);border:1px solid var(--border);
+                border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);
+                max-width:520px;width:100%;padding:32px;text-align:center;">
+      <p style="font-size:2.5rem;margin-bottom:16px;">⚠️</p>
+      <h2 id="error-title" style="font-size:1.25rem;font-weight:700;color:var(--foreground);margin-bottom:8px;">
+        無法載入資料
+      </h2>
+      <p style="color:var(--muted-foreground);font-size:13px;margin-bottom:20px;">
+        找不到 <code style="background:var(--muted);padding:2px 6px;border-radius:4px;">
+        data/dashboard_data.json</code>，請先執行更新腳本，再用本機伺服器開啟頁面。
+      </p>
+      <div style="background:var(--muted);border-radius:var(--radius-md);
+                  padding:16px;text-align:left;font-family:var(--font-mono);
+                  font-size:11px;color:var(--foreground);line-height:2;">
+        <p># 1. 更新資料</p>
+        <p>python src/update_dashboard.py \</p>
+        <p style="padding-left:1.5em;">--run-individual   data/input/run_individual.xlsx \</p>
+        <p style="padding-left:1.5em;">--run-exercise     data/input/run_exercise.xlsx \</p>
+        <p style="padding-left:1.5em;">--bike-individual  data/input/bike_individual.xlsx \</p>
+        <p style="padding-left:1.5em;">--bike-exercise    data/input/bike_exercise.xlsx \</p>
+        <p style="padding-left:1.5em;">--walk-individual  data/input/walk_individual.xlsx \</p>
+        <p style="padding-left:1.5em;">--walk-exercise    data/input/walk_exercise.xlsx</p>
+        <p style="padding-top:8px;"># 2. 啟動本機伺服器（在專案根目錄）</p>
+        <p>python -m http.server 8000</p>
+        <p style="padding-top:8px;"># 3. 開啟瀏覽器</p>
+        <p>http://localhost:8000/public/index.html</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 主內容 ────────────────────────────────────────────── -->
+  <div id="app" class="hidden">
+    <div class="dashboard-wrapper">
+
+      <!-- 頁首 -->
+      <header id="dashboard-header" class="dashboard-header">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div class="section-label" style="margin-bottom:12px;">
+              <span class="section-label-dot"></span>
+              運動戰情看板
+            </div>
+            <h1 class="dashboard-title">
+              WeCatchUp <span class="gradient-text">第四團</span>戰情看板
+            </h1>
+            <p class="dashboard-subtitle" style="margin-top:6px;">
+              活動期間 2026/04/27 – 2026/07/05（共 10 週）
+            </p>
+          </div>
+          <p id="last-updated" class="dashboard-subtitle" style="margin-top:8px; white-space:nowrap;"></p>
+        </div>
+      </header>
+
+      <!-- 整體概覽標題 -->
+      <div class="section-header">
+        <div class="section-label">
+          <span class="section-label-dot"></span>
+          整體概覽
+        </div>
+      </div>
+
+      <!-- 摘要統計列 -->
+      <section id="summary-bar" class="summary-grid">
+        <!-- 由 summary.js 動態產生 -->
+      </section>
+
+      <!-- 各團表現標題 -->
+      <div class="section-header">
+        <div class="section-label">
+          <span class="section-label-dot"></span>
+          各團表現
+        </div>
+      </div>
+
+      <!-- KPI 群組卡片 -->
+      <section id="kpi-cards" class="kpi-grid">
+        <!-- 由 cards.js 動態產生 -->
+      </section>
+
+      <!-- 數據分析圖表（標題與圖表卡片由 charts.js 動態產生） -->
+      <section id="charts-grid" class="charts-grid">
+        <!-- 由 charts.js 動態產生 -->
+      </section>
+
+      <!-- 頁尾 -->
+      <footer id="dashboard-footer" class="dashboard-footer">
+        WeCatchUp 第四團 · 資料來源：JoiiSport
+      </footer>
+
+    </div>
+  </div><!-- /#app -->
+
+  <!-- ── JS 模組載入順序 ───────────────────────────────────── -->
+  <script src="js/i18n.js"></script>  <!-- ★ 必須在 config.js 之前 -->
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/summary.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
