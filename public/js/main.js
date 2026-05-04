@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     btn.textContent = WC.t('lang_toggle');
     btn.title     = 'Switch Language';
     btn.style.cssText = [
-      'position:absolute',
-      'top:24px',
-      'right:24px',
       'padding:6px 14px',
       'border:1.5px solid var(--border)',
       'border-radius:999px',
@@ -25,7 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
       'cursor:pointer',
       'letter-spacing:0.03em',
       'transition:background 0.15s, border-color 0.15s',
-      'z-index:10'
+      'flex-shrink:0',
+      'align-self:flex-start',
+      'margin-top:8px'
     ].join(';');
 
     btn.addEventListener('mouseenter', () => {
@@ -43,9 +42,11 @@ document.addEventListener('DOMContentLoaded', function() {
       WC.setLanguage(WC.currentLang === 'zh' ? 'en' : 'zh');
     });
 
-    /* header 需要 position:relative 讓按鈕 absolute 定位正確 */
-    header.style.position = 'relative';
-    header.appendChild(btn);
+    const tsEl = document.getElementById('last-updated');
+    if (tsEl && tsEl.parentNode) {
+      tsEl.parentNode.style.cssText = 'display:flex;flex-direction:column;align-items:flex-end;gap:8px;';
+      tsEl.parentNode.insertBefore(btn, tsEl);
+    }
   }
 
   WC.loadData(
