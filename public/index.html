@@ -19,7 +19,7 @@
        style="background:var(--background);">
     <div class="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4"
          style="border-color:var(--accent);border-top-color:transparent;"></div>
-    <p style="color:var(--muted-foreground);font-size:13px;">載入資料中...</p>
+    <p id="loading-text" style="color:var(--muted-foreground);font-size:13px;">載入資料中...</p>
   </div>
 
   <!-- ── 錯誤提示面板 ──────────────────────────────────────── -->
@@ -29,7 +29,7 @@
                 border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);
                 max-width:520px;width:100%;padding:32px;text-align:center;">
       <p style="font-size:2.5rem;margin-bottom:16px;">⚠️</p>
-      <h2 style="font-size:1.25rem;font-weight:700;color:var(--foreground);margin-bottom:8px;">
+      <h2 id="error-title" style="font-size:1.25rem;font-weight:700;color:var(--foreground);margin-bottom:8px;">
         無法載入資料
       </h2>
       <p style="color:var(--muted-foreground);font-size:13px;margin-bottom:20px;">
@@ -118,6 +118,7 @@
   </div><!-- /#app -->
 
   <!-- ── JS 模組載入順序 ───────────────────────────────────── -->
+  <script src="js/i18n.js"></script>  <!-- ★ 必須在 config.js 之前 -->
   <script src="js/config.js"></script>
   <script src="js/data.js"></script>
   <script src="js/summary.js"></script>
