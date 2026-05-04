@@ -87,20 +87,18 @@ WC.renderCharts = function(groups) {
 /* 為指定的分布欄位建立三組 datasets */
 function buildDatasets(groups, labelKey, labels) {
   const cfg = WC.config;
+  // 永遠用中文 key 去查 JSON，與顯示語言無關
+  const zhLabels = WC.TRANSLATIONS['zh'][
+    labelKey === 'age_distribution'      ? 'age_labels'      :
+    labelKey === 'duration_distribution' ? 'duration_labels' :
+                                           'time_labels'
+  ];
+
   return cfg.GROUP_ORDER.map(gid => {
     const g = groups[gid];
     return {
       label: WC.t('group_' + gid),
-      data: labels.map(l => {
-        /* 英文標籤與 JSON key（中文）不同，需對應回原始 key */
-        const origLabels = WC.TRANSLATIONS['zh'][
-          labelKey === 'age_distribution'      ? 'age_labels'      :
-          labelKey === 'duration_distribution' ? 'duration_labels' :
-                                                 'time_labels'
-        ];
-        const origKey = origLabels ? origLabels[labels.indexOf(l)] : l;
-        return (g[labelKey] && (g[labelKey][origKey] || g[labelKey][l])) || 0;
-      }),
+      data: zhLabels.map(zhKey => (g[labelKey] && g[labelKey][zhKey]) || 0),
       backgroundColor: g.color + 'cc',
       borderColor: g.color,
       borderWidth: 1,
