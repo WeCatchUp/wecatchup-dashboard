@@ -14,7 +14,17 @@ wecatchup-dashboard/
 ├── src/
 │   └── update_dashboard.py  ← weekly data pipeline (Python 3 + pandas)
 └── public/
-    └── index.html           ← dashboard UI (open via local HTTP server, NOT file://)
+    ├── index.html           ← dashboard UI (open via local HTTP server, NOT file://)
+    ├── css/
+    │   └── design.css       ← design system (CSS variables, component styles)
+    └── js/
+        ├── i18n.js          ← language dictionary + WC.t() + WC.setLanguage()  [added 2026-05]
+        ├── config.js        ← constants (GROUP_ORDER, colors, chart defaults)
+        ├── data.js          ← fetch dashboard_data.json, manage loading/error state
+        ├── summary.js       ← render top 4 summary stat cards
+        ├── cards.js         ← render 3 group KPI cards
+        ├── charts.js        ← render 4 Chart.js charts
+        └── main.js          ← entry point, boot sequence, lang toggle button
 ```
 
 ## Weekly Update Workflow
@@ -50,6 +60,24 @@ python -m http.server 8000
 - Frontend: Pure HTML + TailwindCSS (CDN) + Chart.js (CDN) — no build step
 - Pipeline: Python 3 + pandas (install: `pip install pandas openpyxl`)
 - No npm, no React, no framework
+- i18n: Vanilla JS dictionary pattern (js/i18n.js) — zh-TW / en, URL param ?lang=en supported
+
+## JS Module Architecture
+All modules attach to the global `window.WC` namespace. Load order matters:
+i18n.js → config.js → data.js → summary.js → cards.js → charts.js → main.js
+
+**Key APIs:**
+- `WC.t(key, vars?)` — get translated string, supports `{placeholder}` interpolation
+- `WC.tArr(key)` — get translated array (e.g. axis labels)
+- `WC.setLanguage('zh'|'en')` — switch language and re-render entire dashboard
+- `WC.initLang()` — called once on boot, reads URL `?lang=` or localStorage
+- `WC._lastData` — cached JSON data, used by `setLanguage()` to re-render without refetch
+- `WC._rerender(data)` — full re-render of all sections (called by `setLanguage()`)
+
+**Adding new UI text:**
+1. Add key to both `zh` and `en` blocks in `i18n.js`
+2. Use `WC.t('your_key')` in the rendering module
+3. Never hardcode Chinese or English strings in summary/cards/charts/main.js
 
 ## Color Scheme
 - Run:  #3b82f6 (blue)
@@ -68,3 +96,11 @@ python -m http.server 8000
 The `src/`, `public/index.html`, `package.json`, and `build/` in this repo belong to the
 legacy Money 第三團 React dashboard. The 第四團 dashboard (`public/index.html`) replaces
 the React template for static use. Do not run `npm start` for the 第四團 dashboard.
+
+## Git Workflow
+
+- `main` — stable, corresponds to GitHub Pages live version
+- `feature/*` — new features (e.g. `feature/i18n`)
+- `fix/*` — bug fixes
+
+Always branch off main before making changes. Merge back after local testing.

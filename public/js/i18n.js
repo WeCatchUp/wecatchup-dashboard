@@ -74,10 +74,10 @@ WC.TRANSLATIONS = {
     week_label:     '第 {n} 週',
 
     /* ── 頁尾 ── */
-    footer:                 'WeCatchUp 第四團 · 資料來源：JoiiSport',
+    footer:                 '版權所有 © 2025-2026 華勛股份有限公司 版權所有',
 
     /* ── 語言切換按鈕 ── */
-    lang_toggle:            'EN'
+    lang_toggle:            'English'
   },
 
   en: {
@@ -151,10 +151,10 @@ WC.TRANSLATIONS = {
     week_label:     'Wk {n}',
 
     /* ── 頁尾 ── */
-    footer:                 'WeCatchUp Team 4 · Data Source: JoiiSport',
+    footer:                 'Copyright © 2026 WeCatchUp All Rights Reserved.',
 
     /* ── 語言切換按鈕 ── */
-    lang_toggle:            '中'
+    lang_toggle:            '臺灣華語'
   }
 };
 
