@@ -246,10 +246,13 @@ def process_exercise(filepath: str, group_id: str, leader_emails: set) -> dict:
         # 年齡分布
         age_dist = {k: 0 for k in AGE_LABELS}
         if age_col in dist_df.columns:
-            ages = dist_df[age_col].dropna()
-            cut = pd.cut(ages, bins=AGE_BINS, labels=AGE_LABELS, right=True)
-            counts = cut.value_counts().reindex(AGE_LABELS, fill_value=0)
-            age_dist = counts.to_dict()
+            if email_col in dist_df.columns:
+                ages = dist_df.drop_duplicates(subset=[email_col])[age_col].dropna()
+            else:
+                ages = dist_df.drop_duplicates(subset=[age_col])[age_col].dropna()
+        cut = pd.cut(ages, bins=AGE_BINS, labels=AGE_LABELS, right=True)
+        counts = cut.value_counts().reindex(AGE_LABELS, fill_value=0)
+        age_dist = counts.to_dict()
 
         # 運動時長分布（秒 → 分鐘，只計算 ≥1 分鐘的記錄）
         dur_dist = {k: 0 for k in DURATION_LABELS}
